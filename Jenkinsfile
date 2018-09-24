@@ -38,6 +38,15 @@ mavenNode {
 
     echo 'NOTE: running pipelines for the first time will take longer as build and base docker images are pulled onto the node'
     container(name: 'maven') {
+      stage('Build Bankservice Demo') {
+        steps {
+          echo "Pushing image into DTR"
+          sh 'docker version'
+          sh 'kubectl version'
+          sh 'kubectl get pod'
+          sh 'kubectl get nodes'
+        }
+      }
       stage('Build Release') {
         mavenCanaryRelease {
           version = canaryVersion
@@ -51,24 +60,13 @@ mavenNode {
 
 if (utils.isCD()) {
   node {
-   stage('Checking environment')
-    steps {
-        dir(path: 'k8s') {
-        echo "Deploy BDDDemo"
-        sh 'kubectl get pod'
-        sh 'kubectl get nodes'
-        sh 'docker version'
-        }
-      }  
-    }
     stage('Rollout to Stage') {
       unstash stashName
       setupScript?.setupEnvironmentPre(envStage)
       apply {
         environment = envStage
       }
-      setupScript?.setupEnvironmentPost(envStage)
-      
+      setupScript?.setupEnvironmentPost(envStage)      
     }
   }
 }
