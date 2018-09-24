@@ -64,6 +64,8 @@ if (utils.isCD()) {
         sh 'kubectl get pod'
         sh 'kubectl get nodes'
         sh 'docker version'
+        }
+      }  
     }
   }
 }
