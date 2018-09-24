@@ -58,6 +58,12 @@ if (utils.isCD()) {
         environment = envStage
       }
       setupScript?.setupEnvironmentPost(envStage)
+      steps {
+        dir(path: 'k8s') {
+        echo "Deploy BDDDemo"
+        sh 'kubectl get pod'
+        sh 'kubectl get nodes'
+        sh 'docker version'
     }
   }
 }
