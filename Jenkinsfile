@@ -51,14 +51,8 @@ mavenNode {
 
 if (utils.isCD()) {
   node {
-    stage('Rollout to Stage') {
-      unstash stashName
-      setupScript?.setupEnvironmentPre(envStage)
-      apply {
-        environment = envStage
-      }
-      setupScript?.setupEnvironmentPost(envStage)
-      steps {
+   stage('Checking environment')
+    steps {
         dir(path: 'k8s') {
         echo "Deploy BDDDemo"
         sh 'kubectl get pod'
@@ -66,6 +60,15 @@ if (utils.isCD()) {
         sh 'docker version'
         }
       }  
+    }
+    stage('Rollout to Stage') {
+      unstash stashName
+      setupScript?.setupEnvironmentPre(envStage)
+      apply {
+        environment = envStage
+      }
+      setupScript?.setupEnvironmentPost(envStage)
+      
     }
   }
 }
